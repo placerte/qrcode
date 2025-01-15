@@ -68,7 +68,7 @@ def main() -> None:
 
     title: str = args.title or input("Enter title: ")
     url: str = args.url or input("Enter URL: ")
-    print_title: bool = args.print_title or input("Print title? (yes/no): ").strip().lower() == "yes"
+    print_title: bool = args.print_title or input("Print title? [Y/n]: ").strip().lower() in ["", "y", "yes"]
     prefix: str = args.prefix
 
     generate_qr_code(title, url, print_title, prefix)
