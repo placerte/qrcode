@@ -3,11 +3,39 @@ from qrcode.main import QRCode
 from qrcode import constants
 from PIL import Image, ImageDraw, ImageFont
 from typing import Union
+import os
 
-def generate_qr_code(title: str, url: str, print_title: bool, prefix: str) -> None:
-    filename: str = prefix + title + ".png"
+OUTPUT_DIR_PATH: str = "./output/"
+DEFAULT_FILE_PREFIX = "QR Code - "
+
+def generate_qr_code_image(title: str, url: str, print_title: bool, prefix: str):
+    
+    # Generate filepath
+    filepath: str = generate_filepath(title=title, prefix=prefix)
 
     # Generate QR code
+    qr_code: QRCode = generate_qr_code(url=url)
+
+    # Create a new image with space for the text
+    qr_img: Image.Image = qr_code.make_image(fill_color="black", back_color="white")
+
+    # Manage title printing
+    if print_title:
+        qr_img = add_text_to_image(qr_img, title)
+
+    # Manage output directory
+    manage_output_directory()
+
+    qr_img.save(filepath)
+
+    print(f"QR Code saved as {filepath}")
+
+def generate_filepath(title: str, prefix: str)->str:
+
+    filepath: str = OUTPUT_DIR_PATH + prefix + title + ".png"
+    return filepath
+
+def generate_qr_code(url: str)-> QRCode:
     qr: QRCode = QRCode(
         version=1,
         error_correction=constants.ERROR_CORRECT_L,
@@ -17,16 +45,7 @@ def generate_qr_code(title: str, url: str, print_title: bool, prefix: str) -> No
     qr.add_data(url)
     qr.make(fit=True)
 
-    # Create a new image with space for the text
-    qr_img: Image.Image = qr.make_image(fill_color="black", back_color="white")
-
-    if print_title:
-        img: Image.Image = add_text_to_image(qr_img, title)
-        img.save(filename)
-    else:
-        qr_img.save(filename)
-
-    print(f"QR Code saved as {filename}")
+    return qr
 
 def add_text_to_image(qr_img: Image.Image, title: str) -> Image.Image:
     qr_width: int
@@ -57,12 +76,17 @@ def add_text_to_image(qr_img: Image.Image, title: str) -> Image.Image:
 
     return img
 
+def manage_output_directory():
+
+    if not os.path.exists(OUTPUT_DIR_PATH):
+        os.makedirs(OUTPUT_DIR_PATH)
+
 def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(description="Generate a QR Code with optional title.")
     parser.add_argument("--title", type=str, help="Title to display below the QR Code.")
     parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
     parser.add_argument("--print-title", action="store_true", help="Whether to display the title below the QR Code.")
-    parser.add_argument("--prefix", type=str, default="QR Code - ", help="Filename prefix for the output image.")
+    parser.add_argument("--prefix", type=str, default=DEFAULT_FILE_PREFIX, help="Filename prefix for the output image.")
 
     args: argparse.Namespace = parser.parse_args()
 
@@ -71,7 +95,7 @@ def main() -> None:
     print_title: bool = args.print_title or input("Print title? [Y/n]: ").strip().lower() in ["", "y", "yes"]
     prefix: str = args.prefix
 
-    generate_qr_code(title, url, print_title, prefix)
+    generate_qr_code_image(title, url, print_title, prefix)
 
 if __name__ == "__main__":
     main()
