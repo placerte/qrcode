@@ -2,7 +2,7 @@
 
 ## Description
 
-A simple QR code generator CLI app, wrapper of the [QRCode class](https://pypi.org/project/qrcode/), written in Python.
+A simple QR code generator CLI app, wrapper of the [QRCode class](https://github.com/lincolnloop/python-qrcode), written in Python.
 *(if you don't trust the free websites QR code generator ;))*
 
 
@@ -38,5 +38,6 @@ python qr.py
 ## TODO / Wish List
 
 - [ ] Package the app in a bin for broader public
+    - [ ] Verify licences compliance of packages
 - [ ] Implement a simple GUI
 - [ ] Provide better documentation for the arguments / usage in the README 
