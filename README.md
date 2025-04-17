@@ -2,8 +2,9 @@
 
 ## Description
 
-A simple QR code generator CLI app written in Python.
-*if you don't trust the free websites QR code generator ;)*
+A simple QR code generator CLI app, wrapper of the [QRCode class](https://pypi.org/project/qrcode/), written in Python.
+*(if you don't trust the free websites QR code generator ;))*
+
 
 ## Installation
 
