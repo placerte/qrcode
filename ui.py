@@ -35,6 +35,9 @@ class QRCodeGeneratorGUI():
         # Bottom frame
         self.build_output_dir_widget()
         self.build_file_prefix_widget()
+
+        # Main buttons
+        self.build_save_widget()
         
         self.root.mainloop()
 
@@ -79,3 +82,8 @@ class QRCodeGeneratorGUI():
         # File prefix entry
         file_prefix_entry: ttk.Entry = ttk.Entry(master=self.frame_advanced, textvariable=self.file_prefix_var, width=dui.WIDTH)
         file_prefix_entry.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
+
+
+    def build_save_widget(self):
+        save_button: ttk.Button = ttk.Button(master=self.root, text="Save Image")
+        save_button.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
