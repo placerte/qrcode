@@ -4,9 +4,9 @@ from qrcode import constants
 from PIL import Image, ImageDraw, ImageFont
 from typing import Union
 import os
+from ui import QRCodeGeneratorGUI
+from defaults import DefaultsFileManagent as dfm
 
-OUTPUT_DIR_PATH: str = "./output/"
-DEFAULT_FILE_PREFIX = "QR Code - "
 
 def generate_qr_code_image(title: str, url: str, print_title: bool, prefix: str):
     
@@ -30,9 +30,10 @@ def generate_qr_code_image(title: str, url: str, print_title: bool, prefix: str)
 
     print(f"QR Code saved as {filepath}")
 
+# TODO: refactor to put output dir as an argument
 def generate_filepath(title: str, prefix: str)->str:
 
-    filepath: str = OUTPUT_DIR_PATH + prefix + title + ".png"
+    filepath: str = dfm.OUTPUT_DIR_PATH + prefix + title + ".png"
     return filepath
 
 def generate_qr_code(url: str)-> QRCode:
@@ -76,19 +77,25 @@ def add_text_to_image(qr_img: Image.Image, title: str) -> Image.Image:
 
     return img
 
-def manage_output_directory():
+def manage_output_directory(output_dir: str):
 
-    if not os.path.exists(OUTPUT_DIR_PATH):
-        os.makedirs(OUTPUT_DIR_PATH)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
 def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(description="Generate a QR Code with optional title.")
     parser.add_argument("--title", type=str, help="Title to display below the QR Code.")
     parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
     parser.add_argument("--print-title", action="store_true", help="Whether to display the title below the QR Code.")
-    parser.add_argument("--prefix", type=str, default=DEFAULT_FILE_PREFIX, help="Filename prefix for the output image.")
+    parser.add_argument("--prefix", type=str, default=dfm.FILE_PREFIX, help="Filename prefix for the output image.")
+    parser.add_argument("--gui", action="store_true", help="Lauches GUI instead of CLI")
 
     args: argparse.Namespace = parser.parse_args()
+
+    if args.gui:
+        qr_gui: QRCodeGeneratorGUI = QRCodeGeneratorGUI()
+        qr_gui.launch()
+        return
 
     title: str = args.title or input("Enter title: ")
     url: str = args.url or input("Enter URL: ")
