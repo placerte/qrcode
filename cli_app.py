@@ -3,27 +3,6 @@ import argparse
 from defaults import DefaultsFileManagent as dfm
 from logic import *
 
-def get_parser()->argparse.ArgumentParser:
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        description="Generate a QR Code with optional title."
-    )
-    parser.add_argument("--title", type=str, help="Title to display below the QR Code.")
-    parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
-    parser.add_argument(
-        "--print-title",
-        action="store_true",
-        help="Whether to display the title below the QR Code.",
-    )
-    parser.add_argument(
-        "--prefix",
-        type=str,
-        default=dfm.FILE_PREFIX,
-        help="Filename prefix for the output image.",
-    )
-    parser.add_argument("--gui", action="store_true", help="Lauches GUI instead of CLI")
-
-    return parser
-
 class QRCodeGeneratorCLI():
 
     args: argparse.Namespace

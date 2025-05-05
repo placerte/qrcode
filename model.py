@@ -14,6 +14,8 @@ class QRCode():
     prefix: str
     output_dir: str
 
+    #def __init__(self, args: argparse.Namespace) -> None:
+
     @property
     def filepath(self)->str:
         return self.output_dir + self.prefix + self.title + ".png"
@@ -30,29 +32,31 @@ class QRCode():
         qr.make(fit=True)
 
         return qr
-
-    def generate_qr_code_image(self):
-
-        # Generate QR code
-        self.__qr_code_base: QRCodeBase = self.__generate_qr_code_base(url=self.url)
+    
+    @property
+    def qr_code_image(self)->Image.Image:
 
         # Create a new image with space for the text
-        qr_img: Image.Image = qr_code.make_image(fill_color="black", back_color="white")
+        qr_img: Image.Image = self.__qr_code_base.make_image(fill_color="black", back_color="white")
 
         # Manage title printing
-        if print_title:
-            qr_img = add_text_to_image(qr_img, title)
+        if self.print_title:
+            qr_img = self.__add_title_to_image(qr_img)
+
+
+        return qr_img
+
+    def save_image(self):
 
         # Manage output directory
-        self.manage_output_directory()
+        self.__manage_output_directory()
 
-        qr_img.save(filepath)
+        self.qr_code_image.save(self.filepath)
 
+        #TODO: move to cli app
         print(f"QR Code saved as {filepath}")
 
-
-
-    def add_text_to_image(qr_img: Image.Image, title: str) -> Image.Image:
+    def __add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
         qr_width: int
         qr_height: int
         qr_width, qr_height = qr_img.size
@@ -73,21 +77,20 @@ class QRCode():
             print("Default font used: arial.ttf not found.")
             font = ImageFont.load_default()
 
-        bbox: tuple[int, int, int, int] = draw.textbbox((0, 0), title, font=font)
+        bbox: tuple[int, int, int, int] = draw.textbbox((0, 0), self.title, font=font)
         text_width: int = bbox[2] - bbox[0]
         text_height: int = bbox[3] - bbox[1]
         text_position: tuple[int, int] = ((img_width - text_width) // 2, qr_height + 10)
-        draw.text(text_position, title, font=font, fill="black")
+        draw.text(text_position, self.title, font=font, fill="black")
 
         return img
 
-    def manage_output_directory(self):
+    def __manage_output_directory(self):
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
-
-    def main() -> None:
+    def get_arg_parser(self)->argparse.ArgumentParser:
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
             description="Generate a QR Code with optional title."
         )
@@ -106,22 +109,4 @@ class QRCode():
         )
         parser.add_argument("--gui", action="store_true", help="Lauches GUI instead of CLI")
 
-        args: argparse.Namespace = parser.parse_args()
-
-        if args.gui:
-            qr_gui: QRCodeGeneratorGUI = QRCodeGeneratorGUI()
-            qr_gui.launch()
-            return
-
-        title: str = args.title or input("Enter title: ")
-        url: str = args.url or input("Enter URL: ")
-        print_title: bool = args.print_title or input(
-            "Print title? [Y/n]: "
-        ).strip().lower() in ["", "y", "yes"]
-        prefix: str = args.prefix
-
-        generate_qr_code_image(title, url, print_title, prefix)
-
-
-    if __name__ == "__main__":
-        main()
+        return parser

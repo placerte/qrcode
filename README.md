@@ -41,3 +41,4 @@ python qr.py
     - [ ] Verify licences compliance of packages
 - [ ] Implement a simple GUI
 - [ ] Provide better documentation for the arguments / usage in the README 
+- [ ] Finir le refactoring (régler le parser...)
