@@ -1,4 +1,3 @@
-import argparse
 from qrcode.main import QRCode as QRCodeBase
 from qrcode import constants
 from PIL import Image, ImageDraw, ImageFont
@@ -59,7 +58,7 @@ class QRCode():
         self.qr_code_image.save(self.filepath)
 
         #TODO: move to cli app
-        print(f"QR Code saved as {filepath}")
+        print(f"QR Code saved as {self.filepath}")
 
     def __add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
         qr_width: int

@@ -9,11 +9,13 @@ class QRCodeGeneratorCLI():
         self.qr_code = qr_code
 
     def launch(self):
-        title: str = self.qr_code.title or input("Enter title: ")
-        url: str = self.qr_code.url or input("Enter URL: ")
-        print_title: bool = self.qr_code.print_title or input(
+        self.set_missing_variables()
+        self.qr_code.save_image()
+    
+    def set_missing_variables(self):
+        self.qr_code.title = self.qr_code.title or input("Enter title: ")
+        self.qr_code.url = self.qr_code.url or input("Enter URL: ")
+        self.qr_code.print_title = self.qr_code.print_title or input(
             "Print title? [Y/n]: "
         ).strip().lower() in ["", "y", "yes"]
-        prefix: str = self.qr_code.prefix
-
-        print("yeah")
+        self.qr_code.prefix = self.qr_code.prefix or input("Enter file prefix (optional): ")

@@ -16,7 +16,7 @@ def main() -> None:
     else:
         from cli_app import QRCodeGeneratorCLI
         qr_cli = QRCodeGeneratorCLI = QRCodeGeneratorCLI(qr_code)
-        qr_cli.main()
+        qr_cli.launch()
 
 if __name__ == "__main__":
     main()

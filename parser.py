@@ -25,7 +25,7 @@ class QRCode_Parser():
         parser.add_argument("--title", type=str, help="Title to display below the QR Code.")
         parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
         parser.add_argument(
-            "--print-title",,
+            "--print-title",
             action="store_true",
             help="Whether to display the title below the QR Code.",
         )
