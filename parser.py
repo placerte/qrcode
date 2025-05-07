@@ -5,19 +5,27 @@ from defaults import DefaultsFileManagent as dfm
 class QRCode_Parser():
 
     qr_code: QRCode
+    args: argparse.Namespace
 
     def __init__(self) -> None:
-        self.qr_code = QRCode()
+        self.args = self._build_parser().parse_args()
+        self.qr_code = QRCode(
+            title = self.args.title,
+            url = self.args.url,
+            prefix = self.args.prefix,
+            print_title = self.args.print_title,
+            output_dir = self.args.output_dir
+        )
 
 
-    def get_arg_parser(self)->argparse.ArgumentParser:
+    def _build_parser(self)->argparse.ArgumentParser:
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
             description="Generate a QR Code with optional title."
         )
         parser.add_argument("--title", type=str, help="Title to display below the QR Code.")
         parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
         parser.add_argument(
-            "--print-title",
+            "--print-title",,
             action="store_true",
             help="Whether to display the title below the QR Code.",
         )
@@ -37,14 +45,4 @@ class QRCode_Parser():
 
         parser.add_argument("--gui", action="store_true", help="Lauches GUI instead of CLI")
 
-        self.__populate_qr_code(parser.parse_args())
-
         return parser
-
-    def __populate_qr_code(self, args: argparse.Namespace):
-        self.qr_code.title = args.title
-        self.qr_code.url = args.url
-        self.qr_code.prefix = args.prefix
-        self.qr_code.print_title = args.print_title
-        self.qr_code.output_dir = args.output_dir
-

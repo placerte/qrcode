@@ -1,22 +1,19 @@
 # CLI app
-import argparse
-from defaults import DefaultsFileManagent as dfm
-from logic import *
+from model import QRCode
 
 class QRCodeGeneratorCLI():
 
-    args: argparse.Namespace
+    qr_code: QRCode
 
-    def __init__(self, args: argparse.Namespace):
-        self.args = args
+    def __init__(self, qr_code: QRCode):
+        self.qr_code = qr_code
 
-    def main(self):
-        title: str = self.args.title or input("Enter title: ")
-        url: str = self.args.url or input("Enter URL: ")
-        print_title: bool = self.args.print_title or input(
+    def launch(self):
+        title: str = self.qr_code.title or input("Enter title: ")
+        url: str = self.qr_code.url or input("Enter URL: ")
+        print_title: bool = self.qr_code.print_title or input(
             "Print title? [Y/n]: "
         ).strip().lower() in ["", "y", "yes"]
-        prefix: str = self.args.prefix
+        prefix: str = self.qr_code.prefix
 
-        generate_qr_code_image(title, url, print_title, prefix)
-    
+        print("yeah")

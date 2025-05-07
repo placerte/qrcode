@@ -44,6 +44,13 @@ class QRCode():
 
         return qr_img
 
+    def __init__(self, title: str, print_title: bool, url: str, prefix: str, output_dir: str) -> None:
+        self.title = title
+        self.print_title = print_title
+        self.url = url
+        self.prefix = prefix
+        self.output_dir = output_dir
+
     def save_image(self):
 
         # Manage output directory

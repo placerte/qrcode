@@ -1,10 +1,12 @@
 import argparse
 from model import QRCode
+from parser import QRCode_Parser
 
 def main() -> None:
 
-    qr_code: QRCode = QRCode()
-    args: argparse.Namespace = qr_code.get_arg_parser().parse_args()
+    parser: QRCode_Parser = QRCode_Parser()
+    args: argparse.Namespace = parser.args 
+    qr_code: QRCode = parser.qr_code
 
     if args.gui:
         from gui_app import QRCodeGeneratorGUI
