@@ -11,6 +11,9 @@ class QRCodeGeneratorGUI:
 
     root: tk.Tk = tk.Tk()
     qr_code: QRCode
+    tk_image: ImageTk.PhotoImage
+
+    label_image: tk.Label
     frame_general: tk.LabelFrame = tk.LabelFrame(
         master=root, text="General", padx=10, pady=10
     )
@@ -58,9 +61,9 @@ class QRCodeGeneratorGUI:
     def _on_output_dir_change(self, *_):
         self.qr_code.output_dir = self.output_dir_var.get()
 
-
     def _on_url_change(self, *_):
         self.qr_code.url = self.url_var.get()
+        self.build_image_widget()
 
     def _on_title_change(self, *_):
         self.qr_code.title  = self.title_var.get()
@@ -164,5 +167,7 @@ class QRCodeGeneratorGUI:
         print("clicked boby")
 
     def build_image_widget(self):
-        pass
-        #image: ttk.
+        self.tk_image = ImageTk.PhotoImage(self.qr_code.image)
+
+        self.label_image = tk.Label(master=self.frame_image, image=self.tk_image)
+        self.label_image.pack(padx=dui.PADX, pady=dui.PADY)

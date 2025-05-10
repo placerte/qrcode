@@ -31,7 +31,7 @@ class QRCode():
         return qr
     
     @property
-    def qr_code_image(self)->Image.Image:
+    def image(self)->Image.Image:
 
         # Create a new image with space for the text
         qr_img: Image.Image = self.__qr_code_base.make_image(fill_color="black", back_color="white")
@@ -39,7 +39,6 @@ class QRCode():
         # Manage title printing
         if self.print_title:
             qr_img = self.__add_title_to_image(qr_img)
-
 
         return qr_img
 
@@ -55,7 +54,7 @@ class QRCode():
         # Manage output directory
         self.__manage_output_directory()
 
-        self.qr_code_image.save(self.filepath)
+        self.image.save(self.filepath)
 
         #TODO: move to cli app
         print(f"QR Code saved as {self.filepath}")
