@@ -10,12 +10,12 @@ class QRCode():
     title: str
     url: str
     print_title: bool
-    prefix: str
+    file_prefix: str
     output_dir: str
 
     @property
     def filepath(self)->str:
-        return self.output_dir + self.prefix + self.title + ".png"
+        return self.output_dir + self.file_prefix + self.title + ".png"
     
     @property
     def __qr_code_base(self) -> QRCodeBase:
@@ -43,11 +43,11 @@ class QRCode():
 
         return qr_img
 
-    def __init__(self, title: str, print_title: bool, url: str, prefix: str, output_dir: str) -> None:
+    def __init__(self, title: str, print_title: bool, url: str, file_prefix: str, output_dir: str) -> None:
         self.title = title
         self.print_title = print_title
         self.url = url
-        self.prefix = prefix
+        self.file_prefix = file_prefix
         self.output_dir = output_dir
 
     def save_image(self):

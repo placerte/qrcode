@@ -12,7 +12,7 @@ class QRCode_Parser():
         self.qr_code = QRCode(
             title = self.args.title,
             url = self.args.url,
-            prefix = self.args.prefix,
+            file_prefix = self.args.file_prefix,
             print_title = self.args.print_title,
             output_dir = self.args.output_dir
         )
@@ -30,7 +30,7 @@ class QRCode_Parser():
             help="Whether to display the title below the QR Code.",
         )
         parser.add_argument(
-            "--prefix",
+            "--file-prefix",
             type=str,
             default=dfm.FILE_PREFIX,
             help="Filename prefix for the output image.",

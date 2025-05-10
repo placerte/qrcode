@@ -5,9 +5,12 @@ from defaults import DefaultsUI as dui
 from defaults import DefaultsFileManagent as dfm
 from PIL import Image, ImageTk
 
+from model import QRCode
+
 class QRCodeGeneratorGUI:
 
     root: tk.Tk = tk.Tk()
+    qr_code: QRCode
     frame_general: tk.LabelFrame = tk.LabelFrame(
         master=root, text="General", padx=10, pady=10
     )
@@ -23,6 +26,44 @@ class QRCodeGeneratorGUI:
     output_dir_var: tk.StringVar = tk.StringVar(value=dfm.OUTPUT_DIR_PATH)
     print_title_var: tk.BooleanVar = tk.BooleanVar(value=True)
     file_prefix_var: tk.StringVar = tk.StringVar(value=dfm.FILE_PREFIX)
+    
+    def __init__(self, qr_code: QRCode) -> None:
+
+       self._set_initial_values(qr_code)
+       self._set_variable_bindings()
+
+
+    def _set_initial_values(self, qr_code: QRCode):
+       self.qr_code = qr_code
+       self.url_var.set(self.qr_code.url)
+       self.title_var.set(self.qr_code.title)
+       self.output_dir_var.set(self.qr_code.output_dir)
+       self.print_title_var.set(self.qr_code.print_title)
+       self.file_prefix_var.set(self.qr_code.file_prefix)
+
+    def _set_variable_bindings(self):
+       self.url_var.trace_add("write", self._on_url_change)
+       self.title_var.trace_add("write", self._on_title_change)
+       self.output_dir_var.trace_add("write", self._on_output_dir_change)
+       self.print_title_var.trace_add("write", self._on_print_title_change)
+       self.file_prefix_var.trace_add("write", self._on_file_prefix_change)
+
+
+    def _on_file_prefix_change(self, *_):
+        self.qr_code.file_prefix  = self.file_prefix_var.get()
+
+    def _on_print_title_change(self, *_):
+        self.qr_code.print_title = self.print_title_var.get()
+
+    def _on_output_dir_change(self, *_):
+        self.qr_code.output_dir = self.output_dir_var.get()
+
+
+    def _on_url_change(self, *_):
+        self.qr_code.url = self.url_var.get()
+
+    def _on_title_change(self, *_):
+        self.qr_code.title  = self.title_var.get()
 
     def build_layout(self):
 
