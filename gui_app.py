@@ -26,9 +26,12 @@ class QRCodeGeneratorGUI:
 
     url_var: tk.StringVar = tk.StringVar()
     title_var: tk.StringVar = tk.StringVar()
-    output_dir_var: tk.StringVar = tk.StringVar(value=dfm.OUTPUT_DIR_PATH)
-    print_title_var: tk.BooleanVar = tk.BooleanVar(value=True)
-    file_prefix_var: tk.StringVar = tk.StringVar(value=dfm.FILE_PREFIX)
+    #output_dir_var: tk.StringVar = tk.StringVar(value=dfm.OUTPUT_DIR_PATH)
+    output_dir_var: tk.StringVar = tk.StringVar()
+    #print_title_var: tk.BooleanVar = tk.BooleanVar(value=True)
+    print_title_var: tk.BooleanVar = tk.BooleanVar()
+    #file_prefix_var: tk.StringVar = tk.StringVar(value=dfm.FILE_PREFIX)
+    file_prefix_var: tk.StringVar = tk.StringVar()
     
     def __init__(self, qr_code: QRCode) -> None:
 
