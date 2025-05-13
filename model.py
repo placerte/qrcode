@@ -5,7 +5,8 @@ from typing import Union
 import os
 from defaults import DefaultsFileManagent as dfm
 
-class QRCode():
+
+class QRCode:
 
     title: str
     url: str
@@ -14,9 +15,9 @@ class QRCode():
     output_dir: str
 
     @property
-    def filepath(self)->str:
+    def filepath(self) -> str:
         return self.output_dir + self.file_prefix + self.title + ".png"
-    
+
     @property
     def __qr_code_base(self) -> QRCodeBase:
         qr: QRCodeBase = QRCodeBase(
@@ -29,12 +30,14 @@ class QRCode():
         qr.make(fit=True)
 
         return qr
-    
+
     @property
-    def image(self)->Image.Image:
+    def image(self) -> Image.Image:
 
         # Create a new image with space for the text
-        qr_img: Image.Image = self.__qr_code_base.make_image(fill_color="black", back_color="white")
+        qr_img: Image.Image = self.__qr_code_base.make_image(
+            fill_color="black", back_color="white"
+        )
 
         # Manage title printing
         if self.print_title:
@@ -42,7 +45,9 @@ class QRCode():
 
         return qr_img
 
-    def __init__(self, title: str, print_title: bool, url: str, file_prefix: str, output_dir: str) -> None:
+    def __init__(
+        self, title: str, print_title: bool, url: str, file_prefix: str, output_dir: str
+    ) -> None:
         self.title = title
         self.print_title = print_title
         self.url = url
@@ -56,7 +61,7 @@ class QRCode():
 
         self.image.save(self.filepath)
 
-        #TODO: move to cli app
+        # TODO: move to cli app
         print(f"QR Code saved as {self.filepath}")
 
     def __add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
@@ -92,4 +97,3 @@ class QRCode():
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
-
