@@ -3,8 +3,6 @@ from qrcode import constants
 from PIL import Image, ImageDraw, ImageFont
 from typing import Union
 import os
-from defaults import DefaultsFileManagent as dfm
-
 
 class QRCode:
 
@@ -16,7 +14,14 @@ class QRCode:
 
     @property
     def filepath(self) -> str:
-        return self.output_dir + self.file_prefix + self.title + ".png"
+        if (
+                self.title is not None and
+                self.output_dir is not None and
+                self.file_prefix is not None
+                ):
+            return self.output_dir + self.file_prefix + self.title + ".png"
+        else:
+            return ""
 
     @property
     def __qr_code_base(self) -> QRCodeBase:
@@ -40,8 +45,8 @@ class QRCode:
         )
 
         # Manage title printing
-        if self.print_title:
-            qr_img = self.__add_title_to_image(qr_img)
+        if self.print_title and self.title is not None:
+            qr_img = self._add_title_to_image(qr_img)
 
         return qr_img
 
@@ -64,7 +69,7 @@ class QRCode:
         # TODO: move to cli app
         print(f"QR Code saved as {self.filepath}")
 
-    def __add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
+    def _add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
         qr_width: int
         qr_height: int
         qr_width, qr_height = qr_img.size

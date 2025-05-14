@@ -39,6 +39,6 @@ python qr.py
 
 - [ ] Package the app in a bin for broader public
     - [ ] Verify licences compliance of packages
-- [ ] Implement a simple GUI
+- [x] Implement a simple GUI
 - [ ] Provide better documentation for the arguments / usage in the README 
-- [ ] Finir le refactoring (régler le parser...)
+- [x] Finir le refactoring (régler le parser...)

@@ -10,4 +10,4 @@ class DefaultsUI:
 
 class DefaultsFileManagent:
     OUTPUT_DIR_PATH: str = "./output/"
-    FILE_PREFIX = "QR Code - "
+    FILE_PREFIX = "QRCode-"
