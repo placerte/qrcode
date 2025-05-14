@@ -42,3 +42,5 @@ python qr.py
 - [x] Implement a simple GUI
 - [ ] Provide better documentation for the arguments / usage in the README 
 - [x] Finir le refactoring (régler le parser...)
+- [ ] Fix the cli app
+- [ ] Fix default font not found (terminal message)
