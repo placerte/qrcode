@@ -19,6 +19,6 @@ class QRCodeGeneratorCLI:
         self.qr_code.print_title = self.qr_code.print_title or input(
             "Print title? [Y/n]: "
         ).strip().lower() in ["", "y", "yes"]
-        self.qr_code.prefix = self.qr_code.prefix or input(
+        self.qr_code.file_prefix = self.qr_code.file_prefix or input(
             "Enter file prefix (optional): "
         )
