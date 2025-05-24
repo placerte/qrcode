@@ -45,7 +45,7 @@ class QRCode:
         )
 
         # Manage title printing
-        if self.print_title and self.title is not None:
+        if self.print_title and self.title:
             qr_img = self._add_title_to_image(qr_img)
 
         return qr_img
@@ -73,15 +73,19 @@ class QRCode:
         qr_width: int
         qr_height: int
         qr_width, qr_height = qr_img.size
-        img_width: int = qr_width
-        img_height: int = qr_height + 50  # Add extra space for text
-        img: Image.Image = Image.new("RGB", (img_width, img_height), color="white")
+        img_with_text_width: int = qr_width
+        img_with_text_height: int = qr_height + 50  # Add extra space for text
+        img_with_text: Image.Image = Image.new("RGB", (img_with_text_width, img_with_text_height), color="white")
 
         # Paste the QR code onto the new image
-        img.paste(qr_img, (0, 0))
+        qr_img = qr_img.convert("RGB")
+        try:
+            img_with_text.paste(qr_img, (0, 0))
+        except:
+            print("Could not paste the image (_add_title_to_image)")
 
         # Add text
-        draw: ImageDraw.ImageDraw = ImageDraw.Draw(img)
+        draw: ImageDraw.ImageDraw = ImageDraw.Draw(img_with_text)
 
         font: Union[ImageFont.FreeTypeFont, ImageFont.ImageFont]
         try:
@@ -93,10 +97,10 @@ class QRCode:
         bbox: tuple[int, int, int, int] = draw.textbbox((0, 0), self.title, font=font)
         text_width: int = bbox[2] - bbox[0]
         text_height: int = bbox[3] - bbox[1]
-        text_position: tuple[int, int] = ((img_width - text_width) // 2, qr_height + 10)
+        text_position: tuple[int, int] = ((img_with_text_width - text_width) // 2, qr_height + 10)
         draw.text(text_position, self.title, font=font, fill="black")
 
-        return img
+        return img_with_text
 
     def __manage_output_directory(self):
 
