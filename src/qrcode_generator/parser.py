@@ -1,10 +1,9 @@
 import argparse
-from model import QRCode
-from defaults import DefaultsFileManagent as dfm
+from qrcode_generator.model import QRCode
+from qrcode_generator.defaults import DefaultsFileManagent as dfm
 
 
 class QRCode_Parser:
-
     qr_code: QRCode
     args: argparse.Namespace
 
@@ -14,26 +13,56 @@ class QRCode_Parser:
             title=self.args.title,
             url=self.args.url,
             file_prefix=self.args.file_prefix,
-            print_title= not self.args.no_title,
+            print_title=not self.args.no_title,
             output_dir=self.args.output_dir,
         )
 
     def _build_parser(self) -> argparse.ArgumentParser:
+        class _HelpFormatter(
+            argparse.ArgumentDefaultsHelpFormatter,
+            argparse.RawDescriptionHelpFormatter,
+        ):
+            pass
+
+        description: str = (
+            "Generate a QR Code as a PNG image. If an option is omitted, the CLI "
+            "prompts for it."
+        )
+        epilog: str = (
+            "Examples:\n"
+            "  qrcode --url https://example.com --title Example\n"
+            "  qrcode --url https://example.com --no-title\n"
+            "  qrcode --gui\n"
+            "  qrcode --output-dir ./output/ --file-prefix QRCode-\n"
+            "  qrcode --batch-file ./examples/urls.txt\n"
+        )
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
-            description="Generate a QR Code with optional title."
+            prog="qrcode",
+            description=description,
+            epilog=epilog,
+            formatter_class=_HelpFormatter,
         )
         parser.add_argument(
-            "--title", type=str, help="Title to display below the QR Code."
+            "--title",
+            type=str,
+            metavar="TITLE",
+            help="Title to display below the QR code.",
         )
-        parser.add_argument("--url", type=str, help="URL to encode in the QR Code.")
+        parser.add_argument(
+            "--url",
+            type=str,
+            metavar="URL",
+            help="URL to encode in the QR code.",
+        )
         parser.add_argument(
             "--no-title",
             action="store_true",
-            help="Whether to display the title below the QR Code.",
+            help="Do not render the title under the QR code.",
         )
         parser.add_argument(
             "--file-prefix",
             type=str,
+            metavar="PREFIX",
             default=dfm.FILE_PREFIX,
             help="Filename prefix for the output image.",
         )
@@ -41,12 +70,25 @@ class QRCode_Parser:
         parser.add_argument(
             "--output-dir",
             type=str,
+            metavar="DIR",
             default=dfm.OUTPUT_DIR_PATH,
-            help="Specify the default output directory",
+            help="Output directory path (include trailing slash).",
         )
 
         parser.add_argument(
-            "--gui", action="store_true", help="Lauches GUI instead of CLI"
+            "--gui",
+            action="store_true",
+            help="Launch the GUI instead of CLI prompts.",
+        )
+
+        parser.add_argument(
+            "--batch-file",
+            type=str,
+            metavar="PATH",
+            help=(
+                "Read URLs from a text file (one per line). Optional title can be "
+                "included in parentheses. Lines starting with # are ignored."
+            ),
         )
 
         return parser

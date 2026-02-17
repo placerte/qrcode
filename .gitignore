@@ -3,3 +3,5 @@ Thumbs.db
 output/
 __pycache__/
 archive/
+
+dist/

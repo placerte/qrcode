@@ -1,0 +1,6 @@
+# Example batch file
+# One URL per line. Optional title in parentheses.
+
+https://google.com (Google search engine)
+https://amazon.ca (Canadian version of Amazon)
+https://example.com

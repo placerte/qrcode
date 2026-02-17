@@ -1,46 +1,104 @@
 # Simple QR Code Generator
 
-## Description
+Generate QR codes from the CLI or a small Tkinter GUI. Output images are saved
+as PNG files in `./output/` by default.
 
-A simple QR code generator CLI app, wrapper of the [QRCode class](https://github.com/lincolnloop/python-qrcode), written in Python.
-*(if you don't trust the free websites QR code generator ;))*
-
+Changelog: `CHANGELOG.md`
 
 ## Installation
 
-Not packaged in any meaningful way for now so it **requires Python 3.1x** and **git** to be installed on the machine.
+### Option A: Pre-built binary (recommended when available)
 
-1. Clone the git repo locally
-    ```bash
-    git clone https://github.com/placerte/qrcode.git
-    ```
-1. Create a virtual environnement (venv or other)
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate
-    ```
-    .venv activation will differ depending on the machine OS
-1. Intall *requirements.txt*
-    ```bash
-    pip install -r requirements.txt
-    ```
+Download the latest release binary and put it on your PATH.
 
-## Usage
+Linux example:
 
-1. Launch the app from the local repo in your terminal using
 ```bash
-python qr.py
-```
-1. Follow the instructions in the terminal (Provide url and a title)
-1. File will be exported in the local repo in a directory named **output**.
+curl -L -o qrcode \
+  https://github.com/placerte/qrcode/releases/latest/download/qrcode-linux-x86_64
 
+chmod +x qrcode
+sudo mv qrcode /usr/local/bin/qrcode
+```
+
+Windows and macOS builds follow the same pattern with the appropriate filename.
+
+### Option B: Run from source (Python 3.9+)
+
+```bash
+git clone https://github.com/placerte/qrcode.git
+cd qrcode
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+You can then run the entry point with:
+
+```bash
+uv run qrcode --help
+```
+
+## Typical usage
+
+Basic CLI:
+
+```bash
+qrcode --url https://example.com --title "Example"
+```
+
+No title:
+
+```bash
+qrcode --url https://example.com --no-title
+```
+
+GUI mode:
+
+```bash
+qrcode --gui
+```
+
+Batch file mode:
+
+```bash
+qrcode --batch-file ./examples/urls.txt
+```
+
+Batch file format rules:
+- One URL per line
+- Optional title in parentheses: `https://example.com (Example title)`
+- Lines starting with `#` are ignored
+- If no title is provided, the QR is generated without a printed title and the
+  filename is derived from the URL
+
+## Build (PyInstaller)
+
+Install build dependencies:
+
+```bash
+uv sync --extra dev
+```
+
+Build a single-file executable:
+
+```bash
+uv run --extra dev pyinstaller pyinstaller.spec
+```
+
+The executable will be in `dist/`.
+
+## Notes
+
+- Output files are saved to `./output/` by default.
+- CLI prompts appear when required values are missing.
+- The GUI updates the preview live when fields change.
 
 ## TODO / Wish List
 
 - [ ] Package the app in a bin for broader public
     - [ ] Verify licences compliance of packages
 - [x] Implement a simple GUI
-- [ ] Provide better documentation for the arguments / usage in the README 
-- [x] Finir le refactoring (régler le parser...)
+- [ ] Provide better documentation for the arguments / usage in the README
+- [x] Finir le refactoring (regler le parser...)
 - [ ] Fix the cli app
-- [ ] Fix default font not found (terminal message)

@@ -1,0 +1,2 @@
+[console_scripts]
+qrcode = qrcode_generator.qr:main

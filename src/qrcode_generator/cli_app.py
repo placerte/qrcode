@@ -1,9 +1,8 @@
 # CLI app
-from model import QRCode
+from qrcode_generator.model import QRCode
 
 
 class QRCodeGeneratorCLI:
-
     qr_code: QRCode
 
     def __init__(self, qr_code: QRCode):

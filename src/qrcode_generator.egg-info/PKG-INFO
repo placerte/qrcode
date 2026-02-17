@@ -1,0 +1,123 @@
+Metadata-Version: 2.4
+Name: qrcode-generator
+Version: 0.1.0
+Summary: Cross-platform QR code generator with CLI and GUI
+Author: Pierre Lacerte
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: pillow==11.2.1
+Requires-Dist: qrcode==8.2
+Provides-Extra: dev
+Requires-Dist: pyinstaller==6.6.0; extra == "dev"
+
+# Simple QR Code Generator
+
+Generate QR codes from the CLI or a small Tkinter GUI. Output images are saved
+as PNG files in `./output/` by default.
+
+Changelog: `CHANGELOG.md`
+
+## Installation
+
+### Option A: Pre-built binary (recommended when available)
+
+Download the latest release binary and put it on your PATH.
+
+Linux example:
+
+```bash
+curl -L -o qrcode \
+  https://github.com/placerte/qrcode/releases/latest/download/qrcode-linux-x86_64
+
+chmod +x qrcode
+sudo mv qrcode /usr/local/bin/qrcode
+```
+
+Windows and macOS builds follow the same pattern with the appropriate filename.
+
+### Option B: Run from source (Python 3.9+)
+
+```bash
+git clone https://github.com/placerte/qrcode.git
+cd qrcode
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+You can then run the entry point with:
+
+```bash
+uv run qrcode --help
+```
+
+## Typical usage
+
+Basic CLI:
+
+```bash
+qrcode --url https://example.com --title "Example"
+```
+
+No title:
+
+```bash
+qrcode --url https://example.com --no-title
+```
+
+GUI mode:
+
+```bash
+qrcode --gui
+```
+
+Batch file mode:
+
+```bash
+qrcode --batch-file ./examples/urls.txt
+```
+
+Batch file format rules:
+- One URL per line
+- Optional title in parentheses: `https://example.com (Example title)`
+- Lines starting with `#` are ignored
+- If no title is provided, the QR is generated without a printed title and the
+  filename is derived from the URL
+
+## Build (PyInstaller)
+
+Install build dependencies:
+
+```bash
+uv sync --extra dev
+```
+
+Or with pip:
+
+```bash
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+Build a single-file executable:
+
+```bash
+uv run --extra dev pyinstaller pyinstaller.spec
+```
+
+The executable will be in `dist/`.
+
+## Notes
+
+- Output files are saved to `./output/` by default.
+- CLI prompts appear when required values are missing.
+- The GUI updates the preview live when fields change.
+
+## TODO / Wish List
+
+- [ ] Package the app in a bin for broader public
+    - [ ] Verify licences compliance of packages
+- [x] Implement a simple GUI
+- [ ] Provide better documentation for the arguments / usage in the README
+- [x] Finir le refactoring (regler le parser...)
+- [ ] Fix the cli app

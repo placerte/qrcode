@@ -1,13 +1,12 @@
 # GUI app
 import tkinter as tk
 from tkinter import ttk
-from defaults import DefaultsUI as dui
 from PIL import ImageTk
-from model import QRCode
+from qrcode_generator.defaults import DefaultsUI as dui
+from qrcode_generator.model import QRCode
 
 
 class QRCodeGeneratorGUI(tk.Tk):
-
     qr_code: QRCode
     tk_image: ImageTk.PhotoImage
 
@@ -15,10 +14,10 @@ class QRCodeGeneratorGUI(tk.Tk):
     label_filepath: ttk.Label
 
     url_var: tk.StringVar
-    title_var: tk.StringVar 
-    output_dir_var: tk.StringVar 
-    print_title_var: tk.BooleanVar 
-    file_prefix_var: tk.StringVar 
+    title_var: tk.StringVar
+    output_dir_var: tk.StringVar
+    print_title_var: tk.BooleanVar
+    file_prefix_var: tk.StringVar
 
     def __init__(self, qr_code: QRCode) -> None:
         super().__init__()
@@ -28,7 +27,6 @@ class QRCodeGeneratorGUI(tk.Tk):
         self._set_variable_bindings()
 
     def _create_widgets(self):
-
         form_frame = ttk.Frame()
         form_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self._create_url_widget(form_frame)
@@ -80,14 +78,12 @@ class QRCodeGeneratorGUI(tk.Tk):
         self._update_filepath_widget()
 
     def _build_layout(self):
-
         self.title = "QR Code Generator"
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
-
-    def _create_title_widget(self, frame:ttk.Frame):
+    def _create_title_widget(self, frame: ttk.Frame):
         # Title Label
         label_title: ttk.Label = ttk.Label(
             master=frame, text="QR code title (optional):"
@@ -111,11 +107,9 @@ class QRCodeGeneratorGUI(tk.Tk):
         )
         url_entry.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
-    def _create_output_dir_widget(self, frame:ttk.Frame):
+    def _create_output_dir_widget(self, frame: ttk.Frame):
         # Output directory label
-        label_output_dir: ttk.Label = ttk.Label(
-            master=frame, text="Output directory:"
-        )
+        label_output_dir: ttk.Label = ttk.Label(master=frame, text="Output directory:")
         label_output_dir.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
         # Output directory Entry
@@ -126,18 +120,16 @@ class QRCodeGeneratorGUI(tk.Tk):
         )
         output_dir_entry.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
-    def _create_print_title_widget(self, frame:ttk.Frame):
+    def _create_print_title_widget(self, frame: ttk.Frame):
         # Print title checkbox
         print_title_check: ttk.Checkbutton = ttk.Checkbutton(
             master=frame, text="Print title", variable=self.print_title_var
         )
         print_title_check.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
-    def _create_file_prefix_widget(self, frame:ttk.Frame):
+    def _create_file_prefix_widget(self, frame: ttk.Frame):
         # File prefix label
-        label_file_prefix: ttk.Label = ttk.Label(
-            master=frame, text="File prefix:"
-        )
+        label_file_prefix: ttk.Label = ttk.Label(master=frame, text="File prefix:")
         label_file_prefix.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
         # File prefix entry
@@ -148,12 +140,11 @@ class QRCodeGeneratorGUI(tk.Tk):
         )
         file_prefix_entry.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
-    def _create_filepath_widget(self, frame:ttk.Frame):
+    def _create_filepath_widget(self, frame: ttk.Frame):
         self.label_filepath = ttk.Label(master=frame, text=self.qr_code.filepath)
         self.label_filepath.pack(padx=dui.PADX, pady=dui.PADY, anchor="w")
 
-
-    def _create_save_widget(self, frame:ttk.Frame):
+    def _create_save_widget(self, frame: ttk.Frame):
         save_button: ttk.Button = ttk.Button(
             master=frame, text="Save Image", command=self._save_widget_on_click
         )
@@ -162,17 +153,15 @@ class QRCodeGeneratorGUI(tk.Tk):
     def _save_widget_on_click(self):
         self.qr_code.save_image()
 
-    def _create_image_widget(self, frame:ttk.Frame):
+    def _create_image_widget(self, frame: ttk.Frame):
         self.tk_image = ImageTk.PhotoImage(self.qr_code.image)
 
         self.label_image = tk.Label(master=frame, image=self.tk_image)
         self.label_image.pack(padx=dui.PADX, pady=dui.PADY)
 
     def _update_image_widget(self):
-
         self.tk_image = ImageTk.PhotoImage(self.qr_code.image)
         self.label_image.configure(image=self.tk_image)
 
     def _update_filepath_widget(self):
-
         self.label_filepath.configure(text=self.qr_code.filepath)
