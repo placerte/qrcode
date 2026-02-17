@@ -1,20 +1,20 @@
 [project]
 name = "qrcode-generator"
-version = "0.1.0"
+version = "0.1.1"
 description = "Cross-platform QR code generator with CLI and GUI"
 authors = [
     { name="Pierre Lacerte" }
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.13"
 dependencies = [
     "pillow==11.2.1",
     "qrcode==8.2",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pyinstaller==6.6.0",
+    "pyinstaller>=6.19.0",
 ]
 
 [project.scripts]

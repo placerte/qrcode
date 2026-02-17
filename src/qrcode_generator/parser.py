@@ -1,4 +1,6 @@
 import argparse
+
+from qrcode_generator import __version__
 from qrcode_generator.model import QRCode
 from qrcode_generator.defaults import DefaultsFileManagent as dfm
 
@@ -42,6 +44,13 @@ class QRCode_Parser:
             epilog=epilog,
             formatter_class=_HelpFormatter,
         )
+        parser.add_argument(
+            "--version",
+            action="version",
+            version=f"qrcode {__version__}",
+            help="Show the qrcode version and exit.",
+        )
+
         parser.add_argument(
             "--title",
             type=str,

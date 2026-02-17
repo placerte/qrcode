@@ -80,6 +80,9 @@ Install build dependencies:
 uv sync --extra dev
 ```
 
+Use a Python 3.12 virtualenv when building the binary (PyInstaller 6.6 does not
+support Python 3.13, and the resulting executable can crash on launch).
+
 Build a single-file executable:
 
 ```bash

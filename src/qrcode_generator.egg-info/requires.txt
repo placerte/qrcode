@@ -1,5 +1,2 @@
 pillow==11.2.1
 qrcode==8.2
-
-[dev]
-pyinstaller==6.6.0

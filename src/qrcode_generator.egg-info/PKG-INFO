@@ -3,12 +3,10 @@ Name: qrcode-generator
 Version: 0.1.0
 Summary: Cross-platform QR code generator with CLI and GUI
 Author: Pierre Lacerte
-Requires-Python: >=3.9
+Requires-Python: >=3.13
 Description-Content-Type: text/markdown
 Requires-Dist: pillow==11.2.1
 Requires-Dist: qrcode==8.2
-Provides-Extra: dev
-Requires-Dist: pyinstaller==6.6.0; extra == "dev"
 
 # Simple QR Code Generator
 
@@ -91,6 +89,9 @@ Install build dependencies:
 ```bash
 uv sync --extra dev
 ```
+
+Use a Python 3.12 virtualenv when building the binary (PyInstaller 6.6 does not
+support Python 3.13, and the resulting executable can crash on launch).
 
 Build a single-file executable:
 
