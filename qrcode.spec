@@ -1,6 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from PyInstaller.utils.hooks import collect_submodules
+
 block_cipher = None
+
+
+hiddenimports = collect_submodules("PIL") + ["PIL._tkinter_finder"]
 
 
 a = Analysis(
@@ -8,7 +13,7 @@ a = Analysis(
     pathex=["."],
     binaries=[],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

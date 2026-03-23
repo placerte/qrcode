@@ -134,6 +134,12 @@
 #   - Verify output file path and image contents.
 #   - Check batch file behavior.
 #   - Check GUI updates when fields change.
+#   - For release binaries, explicitly test `./dist/qrcode --help`,
+#     `./dist/qrcode --url ...`, and `./dist/qrcode --gui` before publishing.
+#   - On a headless Linux host, a GUI run may still fail on missing `$DISPLAY`;
+#     that is acceptable only after confirming the packaged binary no longer
+#     fails on missing Tk/Pillow modules such as `tkinter`,
+#     `PIL._tkinter_finder`, or `PyImagingPhoto`.
 # - If you add more tests, keep them lightweight and document any new commands in README and here.
 
 # Misc conventions
@@ -156,5 +162,3 @@
 # - Keep it concise and accurate.
 # - Update command sections if tooling changes.
 # - Add new rules from Cursor/Copilot if they appear later.
-ew rules from Cursor/Copilot if they appear later.
-they appear later.
