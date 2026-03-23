@@ -28,14 +28,17 @@
 # - Run CLI app: `uv run qrcode --url https://example.com --title Example`
 # - Run GUI: `uv run qrcode --gui`
 # - Build (PyInstaller): `uv run --extra dev pyinstaller qrcode.spec`
-# - Format: `uv run --extra dev black src`
-# - Tests: none configured yet.
+# - Format: optional ad-hoc tooling (not pinned in project metadata)
+# - Tests: `uv run pytest`
+# - CI: GitHub Actions runs `uv sync --group dev` and `uv run pytest`
 #
 # If you add tooling, document it here and mirror any new commands in README.
 
 # Dependency management
 # - Runtime deps are pinned in `requirements.txt` and mirrored in `pyproject.toml`.
 # - Dev/build deps live in `pyproject.toml` under `[dependency-groups]`.
+# - One-off dump tooling such as `produm` should stay out of managed project
+#   dependencies unless the supported Python range is adjusted to match.
 # - If you add a runtime dependency, update both `requirements.txt` and README.
 # - Avoid adding heavy libraries; keep the app lightweight.
 
@@ -123,12 +126,13 @@
 # - Build artifacts (`dist/`, `build/`, `*.egg-info/`) should remain ignored.
 
 # Testing guidance
-# - No automated test suite exists yet; use manual verification for now:
+# - Automated smoke tests live under `tests/` and run with `uv run pytest`.
+# - Manual verification is still useful for GUI and output checks:
 #   - Generate QR code with and without title.
 #   - Verify output file path and image contents.
 #   - Check batch file behavior.
 #   - Check GUI updates when fields change.
-# - If you add tests, prefer pytest and document the command in README and here.
+# - If you add more tests, keep them lightweight and document any new commands in README and here.
 
 # Misc conventions
 # - Keep user-facing strings short and friendly.
@@ -150,3 +154,4 @@
 # - Keep it concise and accurate.
 # - Update command sections if tooling changes.
 # - Add new rules from Cursor/Copilot if they appear later.
+ew rules from Cursor/Copilot if they appear later.

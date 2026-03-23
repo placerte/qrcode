@@ -1,16 +1,17 @@
 import argparse
+from typing import Optional, Sequence
 
 from qrcode_generator import __version__
-from qrcode_generator.model import QRCode
 from qrcode_generator.defaults import DefaultsFileManagent as dfm
+from qrcode_generator.model import QRCode
 
 
 class QRCode_Parser:
     qr_code: QRCode
     args: argparse.Namespace
 
-    def __init__(self) -> None:
-        self.args = self._build_parser().parse_args()
+    def __init__(self, argv: Optional[Sequence[str]] = None) -> None:
+        self.args = self._build_parser().parse_args(argv)
         self.qr_code = QRCode(
             title=self.args.title,
             url=self.args.url,
@@ -35,7 +36,7 @@ class QRCode_Parser:
             "  qrcode --url https://example.com --title Example\n"
             "  qrcode --url https://example.com --no-title\n"
             "  qrcode --gui\n"
-            "  qrcode --output-dir ./output/ --file-prefix QRCode-\n"
+            "  qrcode --output-dir ./output --file-prefix QRCode-\n"
             "  qrcode --batch-file ./examples/urls.txt\n"
         )
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
@@ -75,21 +76,18 @@ class QRCode_Parser:
             default=dfm.FILE_PREFIX,
             help="Filename prefix for the output image.",
         )
-
         parser.add_argument(
             "--output-dir",
             type=str,
             metavar="DIR",
             default=dfm.OUTPUT_DIR_PATH,
-            help="Output directory path (include trailing slash).",
+            help="Output directory path.",
         )
-
         parser.add_argument(
             "--gui",
             action="store_true",
             help="Launch the GUI instead of CLI prompts.",
         )
-
         parser.add_argument(
             "--batch-file",
             type=str,

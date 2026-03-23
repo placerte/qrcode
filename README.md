@@ -23,7 +23,21 @@ sudo mv qrcode /usr/local/bin/qrcode
 
 Windows and macOS builds follow the same pattern with the appropriate filename.
 
-### Option B: Run from source (Python 3.9+)
+### Option B: Run from source with `uv` (Python 3.9+)
+
+```bash
+git clone https://github.com/placerte/qrcode.git
+cd qrcode
+uv sync
+```
+
+You can then run the entry point with:
+
+```bash
+uv run qrcode --help
+```
+
+### Option C: Run from source with `venv` + `pip` (Python 3.9+)
 
 ```bash
 git clone https://github.com/placerte/qrcode.git
@@ -36,7 +50,7 @@ pip install -r requirements.txt
 You can then run the entry point with:
 
 ```bash
-uv run qrcode --help
+python -m qrcode_generator.qr --help
 ```
 
 ## Typical usage
@@ -47,10 +61,22 @@ Basic CLI:
 qrcode --url https://example.com --title "Example"
 ```
 
+Basic CLI from source:
+
+```bash
+uv run qrcode --url https://example.com --title "Example"
+```
+
 No title:
 
 ```bash
 qrcode --url https://example.com --no-title
+```
+
+Custom output directory and filename prefix:
+
+```bash
+qrcode --url https://example.com --title "Example" --output-dir ./output --file-prefix Demo-
 ```
 
 GUI mode:
@@ -80,28 +106,44 @@ Install build dependencies:
 uv sync --extra dev
 ```
 
-Use a Python 3.12 virtualenv when building the binary (PyInstaller 6.6 does not
-support Python 3.13, and the resulting executable can crash on launch).
+Use a Python 3.12 virtualenv when building the binary. Current PyInstaller
+support for Python 3.13 is not reliable for this app, and the resulting
+executable can crash on launch.
 
 Build a single-file executable:
 
 ```bash
-uv run --extra dev pyinstaller pyinstaller.spec
+uv run --group dev pyinstaller qrcode.spec
 ```
 
 The executable will be in `dist/`.
+
+## Development
+
+Run tests:
+
+```bash
+uv run pytest
+```
+
+Formatting is optional and intentionally not pinned in project metadata. If you want to use `black`, install or run it separately in your own environment.
+
+Optional dump tooling is intentionally not pinned in the project metadata. If you want to use `produm` for one-off repository dumps, install or run it separately in your own environment.
 
 ## Notes
 
 - Output files are saved to `./output/` by default.
 - CLI prompts appear when required values are missing.
 - The GUI updates the preview live when fields change.
+- Titles are rendered with the best available TrueType font on the system.
+  If none is found, Pillow falls back to a basic bitmap font and the title may
+  look rough.
 
 ## TODO / Wish List
 
 - [ ] Package the app in a bin for broader public
-    - [ ] Verify licences compliance of packages
+  - [ ] Verify licence compliance of packages
 - [x] Implement a simple GUI
-- [ ] Provide better documentation for the arguments / usage in the README
-- [x] Finir le refactoring (regler le parser...)
-- [ ] Fix the cli app
+- [x] Provide better documentation for the arguments / usage in the README
+- [x] Finish the parser refactor
+- [ ] Improve the CLI app ergonomics further

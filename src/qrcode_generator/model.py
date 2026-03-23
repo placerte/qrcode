@@ -1,9 +1,9 @@
 import os
 from typing import Optional, Sequence, Tuple, Union
 
+from PIL import Image, ImageDraw, ImageFont
 from qrcode import constants
 from qrcode.main import QRCode as QRCodeBase
-from PIL import Image, ImageDraw, ImageFont
 
 _FONT_FALLBACK_WARNED = False
 
@@ -12,22 +12,19 @@ class QRCode:
     BOX_SIZE: int = 10
     BORDER: int = 4
 
-    title: str
-    url: str
+    title: Optional[str]
+    url: Optional[str]
     print_title: bool
     file_prefix: str
     output_dir: str
 
     @property
     def filepath(self) -> str:
-        if (
-            self.title is not None
-            and self.output_dir is not None
-            and self.file_prefix is not None
-        ):
-            return self.output_dir + self.file_prefix + self.title + ".png"
-        else:
+        if self.title is None or self.output_dir is None or self.file_prefix is None:
             return ""
+
+        filename = f"{self.file_prefix}{self.title}.png"
+        return os.path.join(self.output_dir, filename)
 
     @property
     def __qr_code_base(self) -> QRCodeBase:
@@ -44,19 +41,22 @@ class QRCode:
 
     @property
     def image(self) -> Image.Image:
-        # Create a new image with space for the text
         qr_img: Image.Image = self.__qr_code_base.make_image(
             fill_color="black", back_color="white"
         )
 
-        # Manage title printing
         if self.print_title and self.title:
             qr_img = self._add_title_to_image(qr_img)
 
         return qr_img
 
     def __init__(
-        self, title: str, print_title: bool, url: str, file_prefix: str, output_dir: str
+        self,
+        title: Optional[str],
+        print_title: bool,
+        url: Optional[str],
+        file_prefix: str,
+        output_dir: str,
     ) -> None:
         self.title = title
         self.print_title = print_title
@@ -64,13 +64,9 @@ class QRCode:
         self.file_prefix = file_prefix
         self.output_dir = output_dir
 
-    def save_image(self):
-        # Manage output directory
+    def save_image(self) -> None:
         self.__manage_output_directory()
-
         self.image.save(self.filepath)
-
-        # TODO: move to cli app
         print(f"QR Code saved as {self.filepath}")
 
     def _add_title_to_image(self, qr_img: Image.Image) -> Image.Image:
@@ -91,7 +87,6 @@ class QRCode:
         text_height: int = text_bbox[3] - text_bbox[1]
         img_with_text_height: int = qr_height + text_height + (vertical_padding * 2)
 
-        # Paste the QR code onto the new image
         qr_img = qr_img.convert("RGB")
         try:
             img_with_text: Image.Image = Image.new(
@@ -102,7 +97,6 @@ class QRCode:
             print("Could not paste the image (_add_title_to_image)")
             return qr_img
 
-        # Add text
         draw: ImageDraw.ImageDraw = ImageDraw.Draw(img_with_text)
         text_left: int = (
             quiet_zone + horizontal_padding + ((available_width - text_width) // 2)
@@ -133,14 +127,11 @@ class QRCode:
             except OSError:
                 continue
 
-        if font is None:
-            self._warn_font_fallback("Default bitmap font used: no TTF found.")
-            font = ImageFont.load_default()
-            text_bbox = self._measure_text_bbox(draw, text, font)
-            return font, text_bbox
-
-        if selected_font_path is None:
-            self._warn_font_fallback("Default bitmap font used: no TTF found.")
+        if font is None or selected_font_path is None:
+            self._warn_font_fallback(
+                "No TrueType font found; falling back to Pillow's default bitmap font. "
+                "Titles may look rough on this system."
+            )
             font = ImageFont.load_default()
             text_bbox = self._measure_text_bbox(draw, text, font)
             return font, text_bbox
@@ -208,6 +199,6 @@ class QRCode:
         _FONT_FALLBACK_WARNED = True
         print(message)
 
-    def __manage_output_directory(self):
+    def __manage_output_directory(self) -> None:
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)

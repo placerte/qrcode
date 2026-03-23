@@ -32,18 +32,14 @@ def main() -> None:
     if args.gui:
         from qrcode_generator.gui_app import QRCodeGeneratorGUI
 
-        qr_gui: QRCodeGeneratorGUI = QRCodeGeneratorGUI(qr_code)
+        qr_gui = QRCodeGeneratorGUI(qr_code)
         qr_gui.mainloop()
         return
-    else:
-        from qrcode_generator.cli_app import QRCodeGeneratorCLI
 
-        qr_cli = QRCodeGeneratorCLI = QRCodeGeneratorCLI(qr_code)
-        qr_cli.launch()
+    from qrcode_generator.cli_app import QRCodeGeneratorCLI
 
-
-if __name__ == "__main__":
-    main()
+    qr_cli = QRCodeGeneratorCLI(qr_code)
+    qr_cli.launch()
 
 
 def _process_batch_file(batch_path: str, output_dir: str, file_prefix: str) -> None:
@@ -112,3 +108,7 @@ def _fallback_title_from_url(url: str) -> str:
 
     base = re.sub(r"[^A-Za-z0-9._-]+", "_", base)
     return base or "untitled"
+
+
+if __name__ == "__main__":
+    main()
