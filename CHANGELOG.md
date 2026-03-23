@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 - (Nothing yet.)
 
+## 0.1.3
+- Rebuilt the Linux binary with Tkinter available so the packaged `--gui` path works.
+- Tightened release QC to validate GUI support in the packaged executable before publishing.
+
 ## 0.1.2
 - Added lightweight smoke tests for parser and batch parsing helpers.
 - Added GitHub Actions CI to run the smoke tests.
