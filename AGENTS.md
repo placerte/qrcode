@@ -4,42 +4,53 @@
 # Project snapshot
 # - Simple QR code generator with CLI and Tkinter GUI.
 # - Source is in `src/qrcode_generator`.
-# - Dependencies are lightweight (qrcode + pillow).
+# - Dependencies are intentionally lightweight (`qrcode` + `pillow`).
+# - Packaging is configured via `pyproject.toml` with a setuptools build backend.
 
 # Repo rules
 # - No Cursor rules found in `.cursor/rules/` or `.cursorrules`.
 # - No GitHub Copilot instructions found in `.github/copilot-instructions.md`.
 
 # Environment setup
-# - Python: 3.8+ (README mentions 3.1x; pyproject requires >=3.8).
-# - Create venv: `python -m venv .venv`
-# - Activate: `source .venv/bin/activate`
-# - Install deps: `pip install -r requirements.txt`
+# - Runtime support target: Python 3.9+.
+# - For source installs, prefer `uv`:
+#   - `uv sync`
+#   - `uv run qrcode --help`
+# - Traditional venv also works:
+#   - `python -m venv .venv`
+#   - `source .venv/bin/activate`
+#   - `pip install -r requirements.txt`
+# - PyInstaller builds should use Python 3.12 because current PyInstaller support
+#   for 3.13 is not reliable for this app.
 
 # Build / lint / test commands
-# - Build (PyInstaller): `pyinstaller pyinstaller.spec`
-# - Lint: none configured.
-# - Format: none configured.
-# - Tests: none configured.
-# - Single test: not applicable (no test runner or tests in repo).
+# - Run CLI help: `uv run qrcode --help`
+# - Run CLI app: `uv run qrcode --url https://example.com --title Example`
+# - Run GUI: `uv run qrcode --gui`
+# - Build (PyInstaller): `uv run --extra dev pyinstaller qrcode.spec`
+# - Format: `uv run --extra dev black src`
+# - Tests: none configured yet.
 #
 # If you add tooling, document it here and mirror any new commands in README.
 
 # Dependency management
 # - Runtime deps are pinned in `requirements.txt` and mirrored in `pyproject.toml`.
-# - Dev/build deps live in `pyproject.toml` optional extras (e.g., `dev`).
-# - If you add a dependency, update `requirements.txt` and reflect it in README.
+# - Dev/build deps live in `pyproject.toml` under `[dependency-groups]`.
+# - If you add a runtime dependency, update both `requirements.txt` and README.
 # - Avoid adding heavy libraries; keep the app lightweight.
 
 # Run commands (manual verification)
-# - CLI app: `python src/qrcode_generator/qr.py`
-# - GUI app: `python src/qrcode_generator/qr.py --gui`
+# - CLI help: `uv run qrcode --help`
+# - Generate a QR code: `uv run qrcode --url https://example.com --title Example`
+# - Batch mode: `uv run qrcode --batch-file ./examples/urls.txt`
+# - GUI app: `uv run qrcode --gui`
 # - Output dir defaults to `./output/` (created if missing).
 
 # CLI/GUI workflow expectations
 # - CLI prompts should remain short and clear.
 # - GUI should update preview and filepath when fields change.
 # - Save action should always create the output directory if missing.
+# - Batch mode should stay compatible with the documented `examples/urls.txt` format.
 
 # Layout and entry points
 # - `src/qrcode_generator/qr.py` is the main entry point.
@@ -48,6 +59,7 @@
 # - `src/qrcode_generator/model.py` handles QR creation and image output.
 # - `src/qrcode_generator/parser.py` handles argparse CLI args.
 # - `src/qrcode_generator/defaults.py` contains UI and filesystem defaults.
+# - Console script entry point: `qrcode = qrcode_generator.qr:main`.
 
 # Code style guidelines
 # These reflect current patterns in the codebase.
@@ -55,8 +67,8 @@
 # Formatting
 # - Use 4-space indentation.
 # - Keep blank lines between methods and logical sections.
-# - Line length is not enforced; prefer PEP 8 style when editing.
-# - No formatter is configured; avoid reformatting unrelated lines.
+# - Prefer PEP 8 style when editing.
+# - `black` is available in dev dependencies, but avoid unrelated reformatting.
 # - Avoid trailing whitespace and keep file-level spacing consistent.
 
 # Imports
@@ -64,81 +76,77 @@
 #   1) standard library
 #   2) third-party
 #   3) local modules
-# - Existing modules use local imports like `from model import QRCode`.
-#   Keep the local import style consistent within this package.
+# - Use package-qualified imports inside `src/qrcode_generator`.
 # - Avoid wildcard imports.
 # - Keep Tkinter imports grouped (`import tkinter as tk`, `from tkinter import ttk`).
 
 # Naming conventions
 # - Classes: PascalCase (e.g., `QRCodeGeneratorGUI`).
-# - Functions/methods: snake_case (e.g., `_update_image_widget`).
-# - Constants: ALL_CAPS (e.g., `FILE_PREFIX`).
+# - Functions/methods: snake_case.
+# - Constants: ALL_CAPS.
 # - Private helpers use a single leading underscore.
 # - Avoid double-underscore for new methods unless name-mangling is intended.
 
 # Types and typing
-# - Type hints are used for class attributes and variables.
-# - Prefer explicit types for public methods and class attributes.
-# - Use `typing.Union` or `|` only where needed; keep annotations simple.
+# - Type hints are used in several modules; keep new annotations simple and explicit.
+# - Prefer explicit return types for new or edited public methods.
 # - Avoid introducing heavy typing frameworks unless required.
-# - Use concrete types for Tk variables where possible (StringVar/BooleanVar).
 
 # Error handling
 # - Current code uses simple `try/except` with `print` for user feedback.
-# - Prefer specific exceptions (`except OSError:`) over bare `except:`.
-# - For CLI/GUI flows, `print`-based errors are acceptable.
-# - For library-like helpers, raise exceptions rather than swallowing them.
-# - Keep error messages user-facing and short.
+# - Prefer specific exceptions (`except OSError:`) over broader catches.
+# - For CLI/GUI flows, short `print`-based errors are acceptable.
+# - For helper functions, prefer raising exceptions over swallowing them silently.
 
 # Data and I/O
-# - Output directory is created if missing (`os.makedirs`).
-# - File paths are concatenated as strings; keep behavior stable.
-# - Image operations use PIL (Pillow) and qrcode library.
-# - Preserve output filename format: `<output_dir><file_prefix><title>.png`.
-# - Avoid changing defaults without updating `defaults.py`.
+# - Output directory is created if missing.
+# - Preserve output filename behavior unless intentionally changing it.
+# - Image operations use Pillow and qrcode.
+# - Avoid changing defaults without updating `defaults.py` and README.
 
 # CLI behavior
 # - argparse is used in `QRCode_Parser`.
-# - Keep existing flag names; add new flags carefully to avoid breaking.
+# - Keep existing flags stable where possible.
 # - `--gui` switches from CLI to GUI.
+# - `--batch-file` expects the documented plain-text line format.
 
 # GUI behavior
 # - Tkinter is used with `ttk` widgets.
-# - UI state lives in Tk variables (StringVar/BooleanVar).
-# - Update UI labels and image widgets when state changes.
+# - UI state lives in Tk variables.
 # - Keep references to `PhotoImage` on the instance to avoid garbage collection.
-# - Layout uses grid/pack with padding constants from `DefaultsUI`.
+# - Layout uses constants from `DefaultsUI`.
 
 # File structure conventions
 # - Keep new modules inside `src/qrcode_generator`.
 # - Avoid adding top-level scripts unless documented in README.
-# - Update `defaults.py` for new configurable defaults.
-# - Keep output assets in `output/` (generated at runtime).
+# - Generated output belongs in `output/` and should stay ignored.
+# - Build artifacts (`dist/`, `build/`, `*.egg-info/`) should remain ignored.
 
 # Testing guidance
-# - No test suite exists; use manual verification:
+# - No automated test suite exists yet; use manual verification for now:
 #   - Generate QR code with and without title.
 #   - Verify output file path and image contents.
+#   - Check batch file behavior.
 #   - Check GUI updates when fields change.
-# - If you add tests, prefer pytest and document single-test command:
-#   `pytest -k <pattern>` or `pytest path/to/test_file.py::TestName::test_name`.
+# - If you add tests, prefer pytest and document the command in README and here.
 
 # Misc conventions
 # - Keep user-facing strings short and friendly.
 # - Prefer minimal dependencies.
 # - Avoid changing CLI prompts or output filenames unless required.
-# - Keep variable names descriptive; avoid abbreviations in new code.
+# - Keep variable names descriptive; avoid unnecessary abbreviations.
 
 # Packaging notes
-# - `pyproject.toml` is metadata only; no build backend configured.
-# - Do not assume `pip install .` works unless you add build config.
+# - `pyproject.toml` is the canonical package metadata and build configuration.
+# - `pip install .` / `uv sync` should be assumed to work and stay working.
+# - Keep the console-script entry point functional.
 
 # Version control notes
-# - The `output/` directory contains generated images; avoid relying on it
-#   for source data. If you add new generated files, consider ignoring them.
+# - `output/` contains generated files and should remain ignored.
 # - Do not delete user artifacts unless explicitly requested.
+# - Be cautious about one-off dump files at repo root; prefer documenting or relocating them intentionally.
 
 # When updating this file
 # - Keep it concise and accurate.
-# - Update command sections if new tools are added.
+# - Update command sections if tooling changes.
 # - Add new rules from Cursor/Copilot if they appear later.
