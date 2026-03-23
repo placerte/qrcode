@@ -20,8 +20,10 @@
 #   - `python -m venv .venv`
 #   - `source .venv/bin/activate`
 #   - `pip install -r requirements.txt`
-# - PyInstaller builds should use Python 3.12 because current PyInstaller support
-#   for 3.13 is not reliable for this app.
+# - Pierre prefers the latest stable Python when the ecosystem supports it cleanly
+#   (currently Python 3.13).
+# - Before packaging a binary, verify the build host can import `tkinter` so the
+#   GUI path is not silently excluded from the executable.
 
 # Build / lint / test commands
 # - Run CLI help: `uv run qrcode --help`
@@ -155,3 +157,4 @@
 # - Update command sections if tooling changes.
 # - Add new rules from Cursor/Copilot if they appear later.
 ew rules from Cursor/Copilot if they appear later.
+they appear later.

@@ -4,12 +4,20 @@
 
 - [ ] Update version in `pyproject.toml`
 - [ ] Update `CHANGELOG.md`
-- [ ] Build in a Python 3.12 venv (PyInstaller 6.6 does not support 3.13)
-- [ ] Verify CLI runs: `qrcode --help`
-- [ ] Generate a QR code (CLI) and verify output image
-- [ ] Launch GUI and verify live preview
-- [ ] Build with PyInstaller: `pyinstaller pyinstaller.spec`
-- [ ] Smoke test the executable in `dist/`
+- [ ] Verify source workflow first:
+  - [ ] `uv run pytest`
+  - [ ] `uv run qrcode --help`
+  - [ ] `uv run qrcode --url https://example.com --title Example`
+  - [ ] `uv run qrcode --gui` (or otherwise verify GUI on a machine with a working display/toolkit)
+- [ ] Verify the build host has Tkinter available before packaging:
+  - [ ] `python -c "import tkinter"`
+- [ ] Build with PyInstaller using the intended release environment:
+  - [ ] `uv run --group dev pyinstaller qrcode.spec`
+- [ ] Smoke test the built executable in `dist/`:
+  - [ ] `./dist/qrcode --help`
+  - [ ] `./dist/qrcode --url https://example.com --title Example`
+  - [ ] `./dist/qrcode --gui` to confirm the GUI entry path imports and launches
+- [ ] Review PyInstaller warnings for missing GUI/runtime modules before publishing
 
 ## Release notes template
 
